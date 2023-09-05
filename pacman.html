@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tic Tac Toe</title>
+    <style>
+        body {
+            text-align: center;
+        }
+        
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 5px;
+            margin: 20px auto;
+        }
+        
+        .cell {
+            width: 100px;
+            height: 100px;
+            text-align: center;
+            font-size: 36px;
+            border: 2px solid #333;
+            cursor: pointer;
+        }
+        
+        .message {
+            font-size: 24px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Tic Tac Toe</h1>
+    <div class="board" id="board">
+        <div class="cell" onclick="makeMove(this)"></div>
+        <div class="cell" onclick="makeMove(this)"></div>
+        <div class="cell" onclick="makeMove(this)"></div>
+        <div class="cell" onclick="makeMove(this)"></div>
+        <div class="cell" onclick="makeMove(this)"></div>
+        <div class="cell" onclick="makeMove(this)"></div>
+        <div class="cell" onclick="makeMove(this)"></div>
+        <div class="cell" onclick="makeMove(this)"></div>
+        <div class="cell" onclick="makeMove(this)"></div>
+    </div>
+    <div class="message" id="message"></div>
+    <button onclick="restartGame()">Restart Game</button>
+
+    <script>
+        let currentPlayer = 'X';
+        let board = ['', '', '', '', '', '', '', '', ''];
+        let gameActive = true;
+
+        const winCombos = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+
+        const cells = document.querySelectorAll('.cell');
+        const message = document.getElementById('message');
+
+        function makeMove(cell) {
+            const cellIndex = Array.from(cells).indexOf(cell);
+
+            if (board[cellIndex] === '' && gameActive) {
+                board[cellIndex] = currentPlayer;
+                cell.innerText = currentPlayer;
+                checkWinner();
+                togglePlayer();
+            }
+        }
+
+        function togglePlayer() {
+            currentPlayer = (currentPlayer === 'X') ? 'O' : 'X';
+        }
+
+        function checkWinner() {
+            for (const combo of winCombos) {
+                const [a, b, c] = combo;
+                if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                    message.innerText = `Player ${board[a]} wins!`;
+                    gameActive = false;
+                    return;
+                }
+            }
+
+            if (!board.includes('')) {
+                message.innerText = "It's a tie!";
+                gameActive = false;
+            }
+        }
+
+        function restartGame() {
+            currentPlayer = 'X';
+            board = ['', '', '', '', '', '', '', '', ''];
+            gameActive = true;
+            message.innerText = '';
+            cells.forEach(cell => cell.innerText = '');
+        }
+    </script>
+</body>
+
+</html>
